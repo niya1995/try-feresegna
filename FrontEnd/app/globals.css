@@ -1,0 +1,255 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Company primary blue color #2477a8 */
+    --primary: 204 56% 40%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 36 100% 50%; /* #FF9800 Orange accent */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 204 56% 40%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Slightly lighter primary for dark mode */
+    --primary: 204 56% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 36 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 204 56% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Font family will be applied via next/font in layout.tsx */
+  }
+}
+
+@layer components {
+  .hero-gradient {
+    @apply bg-gradient-to-br from-primary-800 via-primary-900 to-primary-900;
+  }
+
+  .search-page-gradient {
+    @apply bg-gradient-to-br from-primary-800 via-primary-900 to-primary-900;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-600 text-white px-4 py-2 rounded-md transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-md transition-colors;
+  }
+
+  .feature-card {
+    @apply bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700;
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-lg bg-white/10 border border-white/20 rounded-xl shadow-lg;
+  }
+
+  /* Add seat availability indicator styles */
+  .seat-available {
+    @apply bg-green-500;
+  }
+
+  .seat-limited {
+    @apply bg-orange-500;
+  }
+
+  .seat-scarce {
+    @apply bg-red-500;
+  }
+
+  /* Card system design */
+  .card-design {
+    @apply bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm;
+  }
+
+  .card-header {
+    @apply p-4 border-b border-gray-200 dark:border-gray-700;
+  }
+
+  .card-content {
+    @apply p-4;
+  }
+
+  .card-footer {
+    @apply p-4 border-t border-gray-200 dark:border-gray-700;
+  }
+
+  /* Filter panel styles */
+  .filter-section {
+    @apply relative;
+  }
+
+  .filter-section::after {
+    @apply hidden md:block absolute top-0 right-0 w-px h-full bg-white/10;
+    content: "";
+  }
+
+  .filter-section:last-child::after {
+    @apply hidden;
+  }
+
+  /* Trip card styles */
+  .trip-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .trip-card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .trip-card:hover::before {
+    opacity: 1;
+  }
+
+  .trip-card > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.dot-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Animation classes */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.shadow-float {
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.shadow-float:hover {
+  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.4);
+}
+
+/* Enhanced Search Form Styles */
+.search-form-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.search-form-container::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.search-form-container:hover::before {
+  opacity: 1;
+}
+
+.search-form-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Input focus styles */
+.search-form-container input:focus,
+.search-form-container button:focus {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+
+/* Calendar styles */
+.react-calendar {
+  background-color: #1a1a1a !important;
+  color: white !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 0.5rem !important;
+}
+
+.react-calendar__tile--active {
+  background-color: var(--accent) !important;
+  color: white !important;
+}
+
+.react-calendar__tile:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}

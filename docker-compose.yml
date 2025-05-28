@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: microservices_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./Database/DB.sql:/docker-entrypoint-initdb.d/db_init.sql:ro
+    networks:
+      - feresegna-network
+
+  user-service:
+    build:
+      context: ./Backend/user_service
+      dockerfile: Dockerfile
+    container_name: user-service
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=123456
+      - DB_NAME=microservices_db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./Backend/user_service:/app
+    networks:
+      - feresegna-network
+
+  auth-service:
+    build:
+      context: ./Backend/auth_service # Fixed typo: BackEnd -> Backend
+      dockerfile: Dockerfile
+    container_name: auth-service
+    environment:
+      - SECRET_KEY=YOUR_SECRET_KEY_HERE
+      - DATABASE_URL=postgresql://postgres:123456@postgres:5432/microservices_db
+    ports:
+      - "8001:8000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./Backend/auth_service:/app # Fixed typo: BackEnd -> Backend
+    networks:
+      - feresegna-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: feresegna_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - user-service
+      - auth-service
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - feresegna-network
+
+volumes:
+  postgres-data:
+
+
+networks:
+  feresegna-network:
+    driver: bridge
